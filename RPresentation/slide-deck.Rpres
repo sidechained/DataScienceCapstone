@@ -3,7 +3,9 @@ Capstone: A Predictive Text App
 author: Graham Booth
 date:  16/06/2022
 
-
+```{r include = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+```
 
 
 Introducing Capstone
@@ -33,8 +35,7 @@ About the Predictive Text Model (1)
 - model trained on English text data gathered by SwiftKey
 - uses a random sample (5%) of blogs, news & tweets sets
 - using the _tidytext_ library, text data is tokenised into 2 and 3 word ngrams (representing the relationship between words):
-
-```r
+```{r eval = FALSE}
 unnest_tokens(ngram_text, line, token = "ngrams", n = 2) # or n = 3
 ```
 
@@ -42,19 +43,16 @@ unnest_tokens(ngram_text, line, token = "ngrams", n = 2) # or n = 3
   - a _predicted_ element (the last word of the ngram) and
   - a _predictor_ element (the preceding word/2-words)
 
-
-```r
+```{r eval = FALSE}
 extract(ngram_text, into = c('predictor', 'predicted'), '(.*)\\s+([^ ]+)$')
 ```
 
 About the Predictive Text Model (2)
 ========================================================
 
-- next we remove rows where the predicted word is
-  - profane, not english or a 'stop word' (i.e. "is", "and" etc)
+- next we remove rows where the predicted word is profane, not english or a 'stop word' (i.e. "is", "and" etc)
 
-
-```r
+```{r eval = FALSE}
 filter(!predicted %in% profanity$terms) %>% 
 filter(predicted %in% GradyAugmented) %>% 
 filter(!predicted %in% stop_words$word) 
@@ -62,43 +60,22 @@ filter(!predicted %in% stop_words$word)
 
 - for each predictor element, we:
   - count the number of occurrences of each predicted word
-  - keep (up to) the three most frequent
-- these are our 3 best guesses at the next word
+  - keep (up to) the three most frequent (our best guesses)
 
-
-```r
+```{r eval = FALSE}
 group_by(predictor) %>% count(predicted, sort = TRUE) %>% slice_head(n = 3) %>% select(-n)
-mutate(id = row_number()) %>% pivot_wider(names_from = c(id), values_from = c(predicted), names_prefix = "predicted")
 ```
 
 About the Predictive Text Model (3)
 ========================================================
 
 An extract from the text prediction model .csv file looks like this:
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;"> predictor </th>
-   <th style="text-align:left;"> predicted1 </th>
-   <th style="text-align:left;"> predicted2 </th>
-   <th style="text-align:left;"> predicted3 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> on </td>
-   <td style="text-align:left;"> twitter </td>
-   <td style="text-align:left;"> friday </td>
-   <td style="text-align:left;"> top </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> on the </td>
-   <td style="text-align:left;"> floor </td>
-   <td style="text-align:left;"> road </td>
-   <td style="text-align:left;"> ground </td>
-  </tr>
-</tbody>
-</table>
+```{r echo = FALSE}
+line1 <- read.csv("../ShinyApp/corpus.csv.gz", header = FALSE, skip = 397762, nrows = 1)
+line2 <- read.csv("../ShinyApp/corpus.csv.gz", header = FALSE, skip = 400100, nrows = 1)
+extract <- bind_rows(line1, line2) %>% `colnames<-`(c("predictor", "predicted1", "predicted2", "predicted3"))
+knitr::kable(extract, "html")
+```
 
 - so when _on_ is entered we get _twitter_, _friday_ & _top_ as predictions
 - however when _on the_ is entered we receive the more context dependent predictions _floor_, _road_ and _ground_
