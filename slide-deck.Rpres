@@ -83,4 +83,6 @@ knitr::kable(extract, "html")
 - so when _on_ is entered we get _twitter_, _friday_ & _top_ as predictions
 - however when _on the_ is entered we receive the more context dependent predictions _floor_, _road_ and _ground_
 - if no results for _on the_ are found, the algorithm backs off to  _on_
-- for app efficiency we limit this to two-word context prediction, but this approach could be extended to longer phrases e.g. _on the first [day] [thursday] [of]_ for even more accurate prediction
+- for app efficiency we only currently perform two-word context prediction, but this approach could be extended to longer phrases e.g. '_on the first [day] [thursday] [of]_' for more accurate
+
+Thanks for listening - we hope you find 
