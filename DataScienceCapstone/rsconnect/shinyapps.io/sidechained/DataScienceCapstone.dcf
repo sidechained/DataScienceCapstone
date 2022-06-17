@@ -1,0 +1,13 @@
+name: DataScienceCapstone
+title: DataScienceCapstone
+username:
+account: sidechained
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6486394
+bundleId: 6016333
+url: https://sidechained.shinyapps.io/DataScienceCapstone/
+when: 1655449878.35343
+lastSyncTime: 1655449878.35345
+asMultiple: FALSE
+asStatic: FALSE

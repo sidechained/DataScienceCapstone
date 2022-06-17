@@ -1,0 +1,59 @@
+APP EVALUTAION
+
+How would you describe the experience of using this app?
+Does the app present a novel approach and/or is particularly well done?
+Would you hire this person for your own data science startup company?
+
+SLIDE DECK EVALUATION
+
+AIMS:
+Create a slide deck promoting your product and why it is awesome!
+- briefly explain how your predictive model works - algorithm?
+- succinctly quantitatively summarize the performance of your prediction algorithm?
+- show the user how the product works: describe the app, give instructions, and describe how it functions
+
+TITLE SLIDE
+1 Introduction
+- purpose of this presentation is to describe the usage and underlying function of our predictive text app
+- based on data provided by SwiftKey
+- created for the Capstone project of the Data Science Specialisation 
+- The app looks as follows (next slide)
+
+2 Usage Instructions
+- the user interface is very simple, consisting of a text input box
+- all can be seem below
+ 
+3 Description of Algorithm 1
+- I will spend the next few slides detailing how the predictive text model was developed
+- to get around performance/memory issues of shiny, this is handled by an independent R script ("corpus_generator.r") 
+- I begin by taking a random sampling of 10% of the text data provided by SwiftKey
+- from the US English material (i.e. "en_US.blogs.txt", "en_US.news.txt" and "en_US.twitter.txt" files)
+- This corpus of text is then tokenised into 2 and 3 word ngrams, representing the relationship between words
+- Each ngram is split into a predicted element (the last word of the ngram) and a predictor element (the word or - preceding it)
+
+- for each predictor element, I
+-- count the number of occurrences of each predicted word
+-- keep (up to) the three most frequent
+- these will represent our three best guesses at the next word, to be displayed for the user to select from
+- an extract from the data frame might look as follows:
+
+predictor 		predicted1 	predicted2 	predicted3
+energy			efficiency	efficient	NA
+from			the		a		near
+made from		metal		wood		cardboard
+save energy		by		using		everyday
+
+- when the user types "energy" we receive the predictions "efficiency" and "efficient"
+- however when the user types "save energy" we receive the more context dependent predictions "by", "using" or "everyday"
+- for now we limit this two-word context prediction, as anything more produces a far larger database, which currently exceeds Shiny App memory limitations
+- using other platforms, this approach could be extended to longer phrases e.g. "how to save energy" for even more accurate prediction
+
+- the final data frame is output to a comma separated values file and compressed by gzip, resulting in the file "corpus.csv.gz"
+
+4 Description of Algorithm 2
+5 Description of Algorithm 3
+
+Summary recap:
+
+
+
